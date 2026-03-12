@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Torneo.iml" filepath="$PROJECT_DIR$/Torneo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ArbolFamiliar.iml" filepath="$PROJECT_DIR$/ArbolFamiliar.iml" />
     </modules>
   </component>
 </project>
