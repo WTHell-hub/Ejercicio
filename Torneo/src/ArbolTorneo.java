@@ -1,117 +1,117 @@
 public class ArbolTorneo {
-    private NodoTorneo raiz;
-    private LinkedStack<String> pilaCampeones;
-    private int numeroTorneo;
+    private NodoPartido cabeza;
+    private PilaEnlace<String> pilaGanadores;
+    private int numTorneo;
 
-    public ArbolTorneo(String[] equipos, int numeroTorneo) {
+    public ArbolTorneo(String[] equipos, int numTorneo) {
         if (equipos.length != 8) {
-            System.out.println("Error: Se necesitan 8 equipos");
+            System.out.println("Error: necesitas 8 equipos");
             return;
         }
 
-        this.numeroTorneo = numeroTorneo;
-        this.pilaCampeones = new LinkedStack<>();
+        this.numTorneo = numTorneo;
+        this.pilaGanadores = new PilaEnlace<>();
 
-        NodoTorneo qf1 = new NodoTorneo(equipos[0], equipos[1]);
-        NodoTorneo qf2 = new NodoTorneo(equipos[2], equipos[3]);
-        NodoTorneo qf3 = new NodoTorneo(equipos[4], equipos[5]);
-        NodoTorneo qf4 = new NodoTorneo(equipos[6], equipos[7]);
+        NodoPartido c1 = new NodoPartido(equipos[0], equipos[1]);
+        NodoPartido c2 = new NodoPartido(equipos[2], equipos[3]);
+        NodoPartido c3 = new NodoPartido(equipos[4], equipos[5]);
+        NodoPartido c4 = new NodoPartido(equipos[6], equipos[7]);
 
-        NodoTorneo sf1 = new NodoTorneo(qf1, qf2, "Semifinal");
-        NodoTorneo sf2 = new NodoTorneo(qf3, qf4, "Semifinal");
+        NodoPartido s1 = new NodoPartido(c1, c2, "Semis");
+        NodoPartido s2 = new NodoPartido(c3, c4, "Semis");
 
-        this.raiz = new NodoTorneo(sf1, sf2, "Final");
+        this.cabeza = new NodoPartido(s1, s2, "Final");
 
-        System.out.println("Torneo #" + numeroTorneo + " creado");
+        System.out.println("Torneo #" + numTorneo + " listo");
     }
 
-    public void simularTorneo() {
-        System.out.println("\nSIMULACIÓN DEL TORNEO #" + numeroTorneo);
+    public void jugarTorneo() {
+        System.out.println("\nTorneo #" + numTorneo);
 
-        System.out.println("\nCUARTOS DE FINAL:");
-        simularCuartos(raiz.getIzquierdo().getIzquierdo());
-        simularCuartos(raiz.getIzquierdo().getDerecho());
-        simularCuartos(raiz.getDerecho().getIzquierdo());
-        simularCuartos(raiz.getDerecho().getDerecho());
+        System.out.println("\nCuartos:");
+        jugarCuartos(cabeza.getIzq().getIzq());
+        jugarCuartos(cabeza.getIzq().getDer());
+        jugarCuartos(cabeza.getDer().getIzq());
+        jugarCuartos(cabeza.getDer().getDer());
 
-        System.out.println("\nSEMIFINALES:");
-        simularSemifinal(raiz.getIzquierdo());
-        simularSemifinal(raiz.getDerecho());
+        System.out.println("\nSemis:");
+        jugarSemis(cabeza.getIzq());
+        jugarSemis(cabeza.getDer());
 
-        System.out.println("\nFINAL:");
-        simularFinal(raiz);
+        System.out.println("\nFinal:");
+        jugarFinal(cabeza);
 
-        String campeon = raiz.getGanador();
-        pilaCampeones.Push(campeon);
-        System.out.println("\nCampeón guardado: " + campeon);
+        String campeon = cabeza.getGanador();
+        pilaGanadores.push(campeon);
+        System.out.println("\nCampeon: " + campeon);
     }
 
-    private void simularCuartos(NodoTorneo nodo) {
-        double random = Math.random();
-        String ganador = (random < 0.5) ? nodo.getEquipo1() : nodo.getEquipo2();
-        nodo.setGanador(ganador);
+    private void jugarCuartos(NodoPartido nodo) {
+        double r = Math.random();
+        String gana = (r < 0.5) ? nodo.getEq1() : nodo.getEq2();
+        nodo.setGanador(gana);
         System.out.println("  " + nodo);
     }
 
-    private void simularSemifinal(NodoTorneo nodo) {
-        String ganador1 = nodo.getIzquierdo().getGanador();
-        String ganador2 = nodo.getDerecho().getGanador();
+    private void jugarSemis(NodoPartido nodo) {
+        String g1 = nodo.getIzq().getGanador();
+        String g2 = nodo.getDer().getGanador();
 
-        nodo.setEquipo1(ganador1);
-        nodo.setEquipo2(ganador2);
+        nodo.setEq1(g1);
+        nodo.setEq2(g2);
 
-        double random = Math.random();
-        String ganador = (random < 0.5) ? ganador1 : ganador2;
-        nodo.setGanador(ganador);
-
-        System.out.println("  " + nodo);
-    }
-
-    private void simularFinal(NodoTorneo nodo) {
-        String ganador1 = nodo.getIzquierdo().getGanador();
-        String ganador2 = nodo.getDerecho().getGanador();
-
-        nodo.setEquipo1(ganador1);
-        nodo.setEquipo2(ganador2);
-
-        double random = Math.random();
-        String ganador = (random < 0.5) ? ganador1 : ganador2;
-        nodo.setGanador(ganador);
+        double r = Math.random();
+        String gana = (r < 0.5) ? g1 : g2;
+        nodo.setGanador(gana);
 
         System.out.println("  " + nodo);
     }
 
-    public String getCampeon() {
-        if (raiz != null && raiz.getGanador() != null) {
-            return raiz.getGanador();
+    private void jugarFinal(NodoPartido nodo) {
+        String f1 = nodo.getIzq().getGanador();
+        String f2 = nodo.getDer().getGanador();
+
+        nodo.setEq1(f1);
+        nodo.setEq2(f2);
+
+        double r = Math.random();
+        String gana = (r < 0.5) ? f1 : f2;
+        nodo.setGanador(gana);
+
+        System.out.println("  " + nodo);
+    }
+
+    public String dameCampeon() {
+        if (cabeza != null && cabeza.getGanador() != null) {
+            return cabeza.getGanador();
         }
-        return "Torneo no jugado";
+        return "No hay";
     }
 
-    public void mostrarPorRondas() {
-        System.out.println("\nRESULTADOS TORNEO #" + numeroTorneo + "\n");
+    public void verTodo() {
+        System.out.println("\nTorneo #" + numTorneo + "\n");
 
-        System.out.println("CUARTOS:");
-        mostrarPartido(raiz.getIzquierdo().getIzquierdo());
-        mostrarPartido(raiz.getIzquierdo().getDerecho());
-        mostrarPartido(raiz.getDerecho().getIzquierdo());
-        mostrarPartido(raiz.getDerecho().getDerecho());
+        System.out.println("Cuartos:");
+        verPartido(cabeza.getIzq().getIzq());
+        verPartido(cabeza.getIzq().getDer());
+        verPartido(cabeza.getDer().getIzq());
+        verPartido(cabeza.getDer().getDer());
 
-        System.out.println("\nSEMIFINALES:");
-        mostrarPartido(raiz.getIzquierdo());
-        mostrarPartido(raiz.getDerecho());
+        System.out.println("\nSemis:");
+        verPartido(cabeza.getIzq());
+        verPartido(cabeza.getDer());
 
-        System.out.println("\nFINAL:");
-        mostrarPartido(raiz);
+        System.out.println("\nFinal:");
+        verPartido(cabeza);
 
-        System.out.println("\nCAMPEÓN: " + getCampeon());
+        System.out.println("\nCampeon: " + dameCampeon());
     }
 
-    private void mostrarPartido(NodoTorneo nodo) {
+    private void verPartido(NodoPartido nodo) {
         if (nodo.getGanador() != null) {
             System.out.println("  " + nodo.getRonda() + ": " +
-                    nodo.getEquipo1() + " vs " + nodo.getEquipo2() +
-                    " → Ganador: " + nodo.getGanador());
+                    nodo.getEq1() + " vs " + nodo.getEq2() +
+                    " -> " + nodo.getGanador());
         }
     }
 }

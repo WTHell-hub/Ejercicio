@@ -1,58 +1,55 @@
 public class Main {
     public static void main(String[] args) {
 
-        System.out.println("SIMULADOR DE TORNEO");
+        System.out.println("Simulador");
 
         String[] equipos = {
                 "Brasil", "Argentina", "Francia", "Alemania",
-                "España", "Italia", "Inglaterra", "Países Bajos"
+                "España", "Italia", "Inglaterra", "Holanda"
         };
 
-        System.out.println("EQUIPOS PARTICIPANTES:");
+        System.out.println("Equipos:");
         for (int i = 0; i < equipos.length; i++) {
             System.out.println("  " + (i+1) + ". " + equipos[i]);
         }
 
-        LinkedStack<String> pilaGlobal = new LinkedStack<>();
+        PilaEnlace<String> pilaGlobal = new PilaEnlace<>();
 
-        int numTorneos = 5;
-        ArbolTorneo[] torneos = new ArbolTorneo[numTorneos];
+        int total = 5;
+        ArbolTorneo[] torneos = new ArbolTorneo[total];
 
-        for (int i = 0; i < numTorneos; i++) {
-            System.out.println(" TORNEO #" + (i+1));
+        for (int i = 0; i < total; i++) {
+            System.out.println("\n--- Torneo #" + (i+1) + " ---");
 
             torneos[i] = new ArbolTorneo(equipos, i+1);
-            torneos[i].simularTorneo();
+            torneos[i].jugarTorneo();
 
-            String campeon = torneos[i].getCampeon();
-            pilaGlobal.Push(campeon);
+            String campeon = torneos[i].dameCampeon();
+            pilaGlobal.push(campeon);
         }
 
-        String cima = pilaGlobal.Top();
-        System.out.println("   La cima de la pila es: " + cima);
-        System.out.println("   (Este fue el último campeón en agg al torneo #" + numTorneos + ")");
+        String ultimo = pilaGlobal.top();
+        System.out.println("\nUltimo campeon: " + ultimo);
 
+        System.out.println("\nHistorial (al reves):");
+        PilaEnlace<String> pilaTemp = new PilaEnlace<>();
+        int cont = 1;
 
-        System.out.println("   Los campeones en orden inverso:");
-        LinkedStack<String> pilaTemp = new LinkedStack<>();
-        int pos = 1;
-
-        while (!pilaGlobal.isEmpty()) {
-            String campeon = pilaGlobal.Pop();
-            System.out.println("#" + pos + ": " + campeon);
-            pilaTemp.Push(campeon);
-            pos++;
+        while (!pilaGlobal.vacia()) {
+            String campeon = pilaGlobal.pop();
+            System.out.println("#" + cont + ": " + campeon);
+            pilaTemp.push(campeon);
+            cont++;
         }
 
-        while (!pilaTemp.isEmpty()) {
-            String campeon = pilaTemp.Pop();
-            pilaGlobal.Push(campeon);
+        while (!pilaTemp.vacia()) {
+            String campeon = pilaTemp.pop();
+            pilaGlobal.push(campeon);
         }
 
-        System.out.println("RESULTADOS DETALLADOS DE CADA TORNEO");
-
-        for (int i = 0; i < numTorneos; i++) {
-            torneos[i].mostrarPorRondas();
+        System.out.println("\nDetalles:");
+        for (int i = 0; i < total; i++) {
+            torneos[i].verTodo();
         }
     }
 }
